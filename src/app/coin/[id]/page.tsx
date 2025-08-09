@@ -18,7 +18,6 @@ export default function CoinDetailPage() {
   const {
     data: coin,
     isPending: isCoinPending,
-    isLoading,
     isError,
   } = useQuery<CoinDetails>({
     queryKey: ["coin", id],
@@ -27,11 +26,7 @@ export default function CoinDetailPage() {
     refetchOnWindowFocus: false,
   });
 
-  const {
-    data: chartData,
-    isLoading: isChartLoading,
-    isPending: isChartPending,
-  } = useQuery({
+  const {data: chartData, isPending: isChartPending} = useQuery({
     queryKey: ["coinChart", id],
     queryFn: () => getCoinChartById(id),
     enabled: !!id,

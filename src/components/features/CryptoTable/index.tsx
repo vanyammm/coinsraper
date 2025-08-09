@@ -1,7 +1,6 @@
 "use client";
 
 import {Coin} from "@/types/crypto";
-import Image from "next/image";
 import "./style.scss";
 import {CryptoTableItem} from "./CryptoTableItem";
 import {useMemo, useState} from "react";
@@ -25,7 +24,7 @@ export const CryptoTable = ({coins, isLoading}: CryptoTableProps) => {
   });
 
   const sortedCoins = useMemo(() => {
-    let sortableCoins = [...coins];
+    const sortableCoins = [...coins];
 
     if (!sortConfig.key) return sortableCoins;
 

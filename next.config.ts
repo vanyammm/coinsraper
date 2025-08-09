@@ -9,6 +9,7 @@ const nextConfig: NextConfig = {
         port: "",
         pathname: "/coins/images/**",
       },
+      {hostname: "assets.coingecko.com"},
     ],
   },
 };

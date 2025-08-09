@@ -16,13 +16,10 @@ export default function Home() {
 
   const {
     data: allCoinsData,
-    error,
     fetchNextPage,
     hasNextPage,
-    isFetching,
     isFetchingNextPage,
     isPending: isAllCoinsPending,
-    status,
   } = useInfiniteQuery<Coin[]>({
     queryKey: ["coins"],
     queryFn: fetchPaginatedCoins,

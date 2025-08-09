@@ -78,8 +78,8 @@ export async function searchCoins(query: string) {
   try {
     const response = await axios.get(`${API_URL}/search?query=${query}`);
     return response.data.coins;
-  } catch (error) {
-    console.error("Error searching coins:", error);
+  } catch (_error) {
+    console.error("Error searching coins:", _error);
     return [];
   }
 }
@@ -94,8 +94,8 @@ export async function getCoinsByIds(ids: string[]): Promise<Coin[]> {
       `${API_URL}/coins/markets?vs_currency=usd&ids=${idsString}`,
     );
     return response.data;
-  } catch (error) {
-    console.error("Error fetching coins by IDs:", error);
+  } catch (_error) {
+    console.error("Error fetching coins by IDs:", _error);
     return [];
   }
 }

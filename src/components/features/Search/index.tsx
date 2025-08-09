@@ -9,6 +9,7 @@ import "./style.scss";
 import {useFavoritesStore} from "@/modules/favorites-store";
 import {SearchResultCoin} from "@/types/crypto";
 import {useOnClickOutside} from "@/hooks/useOnClickOutside";
+import Image from "next/image";
 
 export const Search = () => {
   const [query, setQuery] = useState("");
@@ -80,7 +81,7 @@ export const Search = () => {
                   className="resultLink"
                   onClick={clearAndClose}
                 >
-                  <img
+                  <Image
                     src={coin.thumb}
                     alt={coin.name}
                     width={24}
