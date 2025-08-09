@@ -1,0 +1,13 @@
+header {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px 10px;
+}
+
+#logo-block {
+    display: flex;
+    align-items: center;
+    font-size: x-large;
+    font-weight: 700;
+    font-family: var(--font-header-code);
+}

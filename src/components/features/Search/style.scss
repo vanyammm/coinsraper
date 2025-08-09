@@ -1,0 +1,109 @@
+.searchContainer {
+  position: relative;
+  width: 100%;
+  max-width: 400px;
+}
+
+.inputWrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+
+  input {
+    width: 100%;
+    padding: 12px 40px 12px 20px; 
+    font-size: 1rem;
+    font-family: var(--font-roboto), sans-serif;
+
+    background-color: rgba(255, 255, 255, 0.05);
+    color: var(--foreground);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 8px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+
+    &::placeholder {
+      color: var(--foreground);
+      opacity: 0.4;
+    }
+
+    &:focus {
+      outline: none;
+      border-color: #3498db;
+      box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2);
+    }
+  }
+
+  .clearButton {
+    position: absolute;
+    right: 10px;
+    background: none;
+    border: none;
+    color: var(--foreground);
+    opacity: 0.5;
+    font-size: 1.5rem;
+    cursor: pointer;
+    transition: opacity 0.2s, transform 0.2s;
+
+    &:hover {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+  }
+}
+
+.resultsDropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  background-color: #1e2732;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  max-height: 400px;
+  overflow-y: auto;
+  z-index: 10;
+  
+  .resultItem {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    transition: background-color 0.2s ease;
+
+    &:hover {
+      background-color: rgba(52, 152, 219, 0.15);
+    }
+    &:last-child {
+      border-bottom: none;
+    }
+
+    .resultLink {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 12px 20px;
+      flex-grow: 1;
+      text-decoration: none;
+      color: inherit;
+
+      img {
+        border-radius: 50%;
+      }
+      span {
+        font-weight: 500;
+      }
+    }
+
+    .favoriteStar {
+      cursor: pointer;
+      font-size: 1.3rem;
+      padding: 10px;
+      margin-left: 10px;
+      transition: transform 0.2s;
+      
+      &:hover {
+        transform: scale(1.2);
+      }
+    }
+  }
+}

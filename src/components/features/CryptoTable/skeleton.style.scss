@@ -1,0 +1,57 @@
+@keyframes shimmer {
+  100% {
+    transform: translateX(100%);
+  }
+}
+
+.skeleton {
+  position: relative;
+  overflow: hidden;
+  background-color: rgba(255, 255, 255, 0.08);
+  border-radius: 4px;
+
+  &::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    transform: translateX(-100%);
+    background: linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0) 0,
+      rgba(255, 255, 255, 0.08) 20%,
+      rgba(255, 255, 255, 0.2) 60%,
+      rgba(255, 255, 255, 0)
+    );
+    animation: shimmer 2s infinite;
+  }
+
+  &--circle {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+  }
+
+  &--star {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+  }
+
+  &--text {
+    height: 16px;
+    margin-bottom: 4px;
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  &--short {
+    width: 40%;
+  }
+  &--medium {
+    width: 60%;
+  }
+}
