@@ -1,9 +1,9 @@
 import {getCoinDetails} from "@/services/coingecko.service";
 import {NextResponse} from "next/server";
 
-export async function GET(request: Request, context: {params: {id: string}}) {
+export async function GET(request: Request, {params}: {params: {id: string}}) {
   try {
-    const {id} = context.params;
+    const {id} = params;
     const coinDetails = await getCoinDetails(id);
     return NextResponse.json(coinDetails);
   } catch (_error) {
