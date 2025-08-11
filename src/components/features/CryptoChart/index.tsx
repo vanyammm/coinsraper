@@ -59,36 +59,21 @@ export const CryptoChart = ({
   const chartRef = useRef<ChartJS<"line">>(null);
 
   useEffect(() => {
+    if (!isMobile) return;
+
     const canvas = chartRef.current?.canvas;
     if (!canvas) return;
 
-    let touchStartX = 0;
-    let touchStartY = 0;
-
-    const handleTouchStart = (e: TouchEvent) => {
-      touchStartX = e.touches[0].clientX;
-      touchStartY = e.touches[0].clientY;
+    const preventScroll = (e: TouchEvent) => {
+      e.preventDefault();
     };
 
-    const handleTouchMove = (e: TouchEvent) => {
-      if (e.touches.length > 1) return;
-
-      const deltaX = Math.abs(e.touches[0].clientX - touchStartX);
-      const deltaY = Math.abs(e.touches[0].clientY - touchStartY);
-
-      if (deltaX > deltaY * 1.5) {
-        e.preventDefault();
-      }
-    };
-
-    canvas.addEventListener("touchstart", handleTouchStart);
-    canvas.addEventListener("touchmove", handleTouchMove, {passive: false});
+    canvas.addEventListener("touchmove", preventScroll, {passive: false});
 
     return () => {
-      canvas.removeEventListener("touchstart", handleTouchStart);
-      canvas.removeEventListener("touchmove", handleTouchMove);
+      canvas.removeEventListener("touchmove", preventScroll);
     };
-  }, []);
+  }, [isMobile]);
 
   const options: ChartOptions<"line"> = useMemo(
     () => ({
@@ -148,14 +133,14 @@ export const CryptoChart = ({
           type: yScaleType,
           ticks: {
             color: "#fff",
+            maxTicksLimit: 8,
             callback: function (value: number | string) {
               const numericValue =
                 typeof value === "string"
                   ? parseFloat(value.replace(/,/g, ""))
                   : value;
 
-              const isCurrentlyMobile = isMobile;
-              if (isCurrentlyMobile && yScaleType === "logarithmic") {
+              if (isMobile) {
                 return new Intl.NumberFormat("en-US", {
                   notation: "compact",
                   compactDisplay: "short",
@@ -176,7 +161,7 @@ export const CryptoChart = ({
         },
       },
     }),
-    [periodLabel, yScaleType],
+    [periodLabel, yScaleType, isMobile],
   );
 
   const data = useMemo(
