@@ -148,17 +148,23 @@ export const CryptoChart = ({
           type: yScaleType,
           ticks: {
             color: "#fff",
-            callback: function (value: any) {
-              if (yScaleType === "logarithmic") {
+            callback: function (value: number | string) {
+              const numericValue =
+                typeof value === "string"
+                  ? parseFloat(value.replace(/,/g, ""))
+                  : value;
+
+              const isCurrentlyMobile = isMobile;
+              if (isCurrentlyMobile && yScaleType === "logarithmic") {
                 return new Intl.NumberFormat("en-US", {
                   notation: "compact",
                   compactDisplay: "short",
-                }).format(value);
+                }).format(numericValue);
               }
               return new Intl.NumberFormat("en-US", {
                 style: "currency",
                 currency: "USD",
-              }).format(value);
+              }).format(numericValue);
             },
           },
         },
@@ -170,7 +176,7 @@ export const CryptoChart = ({
         },
       },
     }),
-    [isMobile, periodLabel, yScaleType],
+    [periodLabel, yScaleType],
   );
 
   const data = useMemo(

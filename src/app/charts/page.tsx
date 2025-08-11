@@ -41,12 +41,13 @@ export default function ChartsPage() {
     enabled: favoriteIds.length >= 2,
   });
 
-  const coinsIdsToFetch =
-    filter === "top5"
+  const coinsIdsToFetch = useMemo(() => {
+    return filter === "top5"
       ? topCoins?.map((c) => c.id) || []
       : filter === "favorites"
       ? favoriteIds
       : compareIds;
+  }, [filter, topCoins, favoriteIds, compareIds]);
 
   const chartQueries = useQueries({
     queries: coinsIdsToFetch.map((id) => ({

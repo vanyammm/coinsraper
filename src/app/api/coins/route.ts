@@ -19,7 +19,7 @@ export async function GET(request: Request) {
       const coins = await getCoinsMarket({pageParam: page, perPage: perPage});
       return NextResponse.json(coins);
     }
-  } catch (error) {
+  } catch (_error) {
     return NextResponse.json({error: "Internal Server Error"}, {status: 500});
   }
 }

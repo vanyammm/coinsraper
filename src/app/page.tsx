@@ -36,7 +36,7 @@ export default function Home() {
     enabled: filter === "all",
   });
 
-  const {data: favoriteCoins, isPending: isFavoritesPending} = useQuery({
+  const {data: favoriteCoins} = useQuery({
     queryKey: ["favoriteCoins"],
     queryFn: () => getFavoriteCoins(favorites),
     enabled: filter === "favorites",
