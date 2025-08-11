@@ -51,8 +51,30 @@ export const CryptoTable = ({coins, isLoading}: CryptoTableProps) => {
     setSortConfig({key, direction});
   };
 
+  const sortableHeaders = tableHeaders.filter((header) => header.key !== null);
+
   return (
     <div className="tableContainer">
+      <div className="mobileSortContainer">
+        <div className="sortButtons">
+          {sortableHeaders.map((header) => (
+            <button
+              key={header.label}
+              className={`sortButton ${
+                sortConfig.key === header.key ? "active" : ""
+              }`}
+              onClick={() => requestSort(header.key as keyof Coin)}
+            >
+              {header.label}
+              {sortConfig.key === header.key && (
+                <span>
+                  {sortConfig.direction === "ascending" ? " ▲" : " ▼"}
+                </span>
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
       <table className="table">
         <thead>
           <tr>

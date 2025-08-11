@@ -28,7 +28,7 @@ export default function CoinDetailPage() {
 
   const {data: chartData, isPending: isChartPending} = useQuery({
     queryKey: ["coinChart", id],
-    queryFn: () => getCoinChartById(id),
+    queryFn: () => getCoinChartById(id, 7),
     enabled: !!id,
     refetchOnWindowFocus: false,
   });
@@ -41,7 +41,7 @@ export default function CoinDetailPage() {
   if (!coin) return <div>Coin not found.</div>;
 
   return (
-    <main style={{padding: "2rem"}}>
+    <main className="coinDetailContainer">
       <div className="coinHeader">
         <Image src={coin.image.large} alt={coin.name} width={50} height={50} />
         <h1>
@@ -57,8 +57,13 @@ export default function CoinDetailPage() {
             </span>
           ))}
       </div>
-      <div style={{maxWidth: "800px", margin: "2rem 0"}}>
-        {chartData && <CryptoChart chartData={chartData} />}
+      <div className="chartContainer">
+        {chartData && (
+          <CryptoChart
+            chartDatasets={[{label: coin.name, data: chartData}]}
+            periodLabel="7 Days"
+          />
+        )}
       </div>
       <h2 className="sectionTitle">Market Statistics</h2>
       <MarketStats coin={coin} />

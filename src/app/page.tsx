@@ -9,6 +9,7 @@ import {Search} from "@/components/features/Search";
 import {COINS_PER_PAGE} from "@/constants/coindata.constants";
 import {useFavoritesStore} from "@/modules/favorites-store";
 import {CryptoTableItemSkeleton} from "@/components/features/CryptoTable/CryptoTableItemSkeleton";
+import {CompareCTA} from "@/components/features/CompareCTA";
 
 export default function Home() {
   const [filter, setFilter] = useState<"all" | "favorites">("all");
@@ -48,6 +49,7 @@ export default function Home() {
 
   return (
     <main>
+      <CompareCTA />
       <Search />
       <div style={{padding: "1rem 0", display: "flex", gap: "1rem"}}>
         <button onClick={() => setFilter("all")} disabled={filter === "all"}>

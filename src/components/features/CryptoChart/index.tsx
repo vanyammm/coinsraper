@@ -1,5 +1,6 @@
 "use client";
 
+import {useMediaQuery} from "@/hooks/useMediaQuery";
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -9,11 +10,18 @@ import {
   Title,
   Tooltip,
   Legend,
+  TimeScale,
+  ChartOptions,
+  LogarithmicScale,
 } from "chart.js";
-import {useMemo} from "react";
+import {useEffect, useMemo, useRef} from "react";
 import {Line} from "react-chartjs-2";
 
+import "chartjs-adapter-date-fns";
+
 ChartJS.register(
+  LogarithmicScale,
+  TimeScale,
   CategoryScale,
   LinearScale,
   PointElement,
@@ -23,51 +31,162 @@ ChartJS.register(
   Legend,
 );
 
-interface CryptoChartProps {
-  chartData: [number, number][];
+interface ChartDataset {
+  label: string;
+  data: [number, number][];
 }
 
-export const CryptoChart = ({chartData}: CryptoChartProps) => {
-  const options = useMemo(
+interface CryptoChartProps {
+  chartDatasets: ChartDataset[];
+  periodLabel: string;
+  yScaleType?: "linear" | "logarithmic";
+}
+
+const lineColors = [
+  "rgb(53, 162, 235)",
+  "rgb(255, 99, 132)",
+  "rgb(75, 192, 192)",
+  "rgb(255, 205, 86)",
+  "rgb(153, 102, 255)",
+];
+
+export const CryptoChart = ({
+  chartDatasets,
+  periodLabel,
+  yScaleType = "linear",
+}: CryptoChartProps) => {
+  const isMobile = useMediaQuery("(max-width: 768px)");
+  const chartRef = useRef<ChartJS<"line">>(null);
+
+  useEffect(() => {
+    const canvas = chartRef.current?.canvas;
+    if (!canvas) return;
+
+    let touchStartX = 0;
+    let touchStartY = 0;
+
+    const handleTouchStart = (e: TouchEvent) => {
+      touchStartX = e.touches[0].clientX;
+      touchStartY = e.touches[0].clientY;
+    };
+
+    const handleTouchMove = (e: TouchEvent) => {
+      if (e.touches.length > 1) return;
+
+      const deltaX = Math.abs(e.touches[0].clientX - touchStartX);
+      const deltaY = Math.abs(e.touches[0].clientY - touchStartY);
+
+      if (deltaX > deltaY * 1.5) {
+        e.preventDefault();
+      }
+    };
+
+    canvas.addEventListener("touchstart", handleTouchStart);
+    canvas.addEventListener("touchmove", handleTouchMove, {passive: false});
+
+    return () => {
+      canvas.removeEventListener("touchstart", handleTouchStart);
+      canvas.removeEventListener("touchmove", handleTouchMove);
+    };
+  }, []);
+
+  const options: ChartOptions<"line"> = useMemo(
     () => ({
       responsive: true,
+      maintainAspectRatio: false,
+      interaction: {
+        mode: "index",
+        intersect: false,
+      },
       plugins: {
         legend: {
-          display: false,
+          display: true,
+          position: "top",
+          labels: {
+            color: "#fff",
+            padding: 20,
+            font: {
+              size: 14,
+            },
+          },
         },
         title: {
           display: true,
-          text: "Price Chart (Last 7 Days)",
-          color: "var(--foreground)",
+          text: `Price Chart (Last ${periodLabel})`,
+          color: "#fff",
+        },
+        tooltip: {
+          callbacks: {
+            label: function (context) {
+              let label = context.dataset.label || "";
+              if (label) {
+                label += ": ";
+              }
+              if (context.parsed.y) {
+                label += new Intl.NumberFormat("en-US", {
+                  style: "currency",
+                  currency: "USD",
+                }).format(context.parsed.y);
+              }
+              return label;
+            },
+          },
         },
       },
       scales: {
         x: {
-          ticks: {color: "var(--foreground)"},
+          type: "time" as const,
+          time: {
+            unit: "day",
+            displayFormats: {
+              day: "dd MMM",
+            },
+          },
+          ticks: {color: "#fff"},
         },
         y: {
-          ticks: {color: "var(--foreground)"},
+          type: yScaleType,
+          ticks: {
+            color: "#fff",
+            callback: function (value: any) {
+              if (yScaleType === "logarithmic") {
+                return new Intl.NumberFormat("en-US", {
+                  notation: "compact",
+                  compactDisplay: "short",
+                }).format(value);
+              }
+              return new Intl.NumberFormat("en-US", {
+                style: "currency",
+                currency: "USD",
+              }).format(value);
+            },
+          },
+        },
+      },
+      elements: {
+        point: {
+          radius: 2,
+          hoverRadius: 5,
         },
       },
     }),
-    [],
+    [isMobile, periodLabel, yScaleType],
   );
 
   const data = useMemo(
     () => ({
-      labels: chartData.map((item) => new Date(item[0]).toLocaleDateString()),
-      datasets: [
-        {
-          fill: true,
-          label: "Price",
-          data: chartData.map((item) => item[1]),
-          borderColor: "rgb(53, 162, 235)",
-          backgroundColor: "rgba(53, 162, 235, 0.2)",
-        },
-      ],
+      datasets: chartDatasets.map((dataset, index) => ({
+        fill: false,
+        label: dataset.label,
+        data: dataset.data.map((item) => ({x: item[0], y: item[1]})),
+        borderColor: lineColors[index % lineColors.length],
+        tension: 0.1,
+        borderWidth: 2,
+        hoverBorderWidth: 3,
+      })),
     }),
-    [chartData],
+    [chartDatasets],
   );
 
-  return <Line options={options} data={data} />;
+  return <Line ref={chartRef} options={options} data={data} />;
 };

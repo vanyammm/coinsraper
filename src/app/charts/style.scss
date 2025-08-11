@@ -1,0 +1,36 @@
+.filtersContainer {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    margin: 1rem 0;
+
+    button {
+        cursor: pointer;
+    }
+
+    .filterSection {
+        display: flex;
+        gap: 0.6rem;
+        align-items: center;
+
+        button {
+            padding: 0.5rem 0.8rem;
+            border-radius: 8px;
+            background-color: #493c7c;
+            border: none;
+        }
+    }
+
+    .periodSection {
+        display: flex;
+        gap: 0.6rem;
+        align-items: center;
+
+        button {
+             padding: 0.5rem 0.8rem;
+            border-radius: 8px;
+            background-color: #41134e5c;
+            border: none;
+        }
+    }
+}

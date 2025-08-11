@@ -7,7 +7,10 @@ export async function GET(
 ) {
   try {
     const {id} = await params;
-    const chartData = await getCoinChartData(id);
+    const {searchParams} = new URL(request.url);
+    const days = parseInt(searchParams.get("days") || "7", 10);
+
+    const chartData = await getCoinChartData(id, days);
     return NextResponse.json(chartData);
   } catch (_error) {
     return NextResponse.json({error: "Internal Server Error"}, {status: 500});

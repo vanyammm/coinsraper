@@ -5,6 +5,7 @@ import Image from "next/image";
 import "./style.scss";
 import Link from "next/link";
 import {useQueryClient} from "@tanstack/react-query";
+import {useCompareStore} from "@/modules/compare-store";
 
 interface CryptoTableItemProps {
   coin: Coin;
@@ -12,9 +13,11 @@ interface CryptoTableItemProps {
 
 export const CryptoTableItem = ({coin}: CryptoTableItemProps) => {
   const {favorites, toggleFavorite} = useFavoritesStore();
+  const {compareIds, toggleCompare} = useCompareStore();
   const queryClient = useQueryClient();
 
   const isFavorite = favorites.includes(coin.id);
+  const isCompared = compareIds.includes(coin.id);
 
   const handleToggleFavorite = () => {
     toggleFavorite(coin.id);
@@ -23,15 +26,22 @@ export const CryptoTableItem = ({coin}: CryptoTableItemProps) => {
 
   return (
     <tr className={isFavorite ? "favorite" : ""}>
-      <td className="favoriteCell">
+      <td data-label="Favorite" className="favoriteCell">
         <span
           onClick={handleToggleFavorite}
           title={isFavorite ? "Remove from favorites" : "Add to favorites"}
         >
           {isFavorite ? "⭐" : "☆"}
         </span>
+        <span
+          className={`compareIcon ${isCompared ? "compared" : ""}`}
+          onClick={() => toggleCompare(coin.id)}
+          title={isCompared ? "Remove from comparsion" : "Add to comparsion"}
+        >
+          ⚖️
+        </span>
       </td>
-      <td>{coin.market_cap_rank}</td>
+      <td data-label="Rank">{coin.market_cap_rank}</td>
       <td>
         <Link href={`/coin/${coin.id}`} className="coinLink">
           <div className="coinInfo">
@@ -46,8 +56,8 @@ export const CryptoTableItem = ({coin}: CryptoTableItemProps) => {
           </div>
         </Link>
       </td>
-      <td>{formatCurrency(coin.current_price)}</td>
-      <td>
+      <td data-label="Price">{formatCurrency(coin.current_price)}</td>
+      <td data-label="24h %">
         <span
           className={
             coin.price_change_percentage_24h >= 0 ? "positive" : "negative"
@@ -56,7 +66,7 @@ export const CryptoTableItem = ({coin}: CryptoTableItemProps) => {
           {coin.price_change_percentage_24h.toFixed(2)}%
         </span>
       </td>
-      <td>{formatCurrency(coin.market_cap)}</td>
+      <td data-label="Market Cap">{formatCurrency(coin.market_cap)}</td>
     </tr>
   );
 };

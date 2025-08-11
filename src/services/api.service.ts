@@ -9,6 +9,11 @@ export const fetchPaginatedCoins = async ({
   return data;
 };
 
+export const getTopCoins = async (limit: number): Promise<Coin[]> => {
+  const {data} = await axios.get<Coin[]>(`/api/coins?page=1&per_page=${limit}`);
+  return data;
+};
+
 export const getFavoriteCoins = async (ids: string[]): Promise<Coin[]> => {
   if (!ids.length) return [];
 
@@ -23,8 +28,9 @@ export const getCoinById = async (id: string): Promise<CoinDetails> => {
 
 export const getCoinChartById = async (
   id: string,
+  days: number,
 ): Promise<[number, number][]> => {
-  const {data} = await axios.get(`/api/coins/${id}/market-chart`);
+  const {data} = await axios.get(`/api/coins/${id}/market-chart?days=${days}`);
   return data;
 };
 

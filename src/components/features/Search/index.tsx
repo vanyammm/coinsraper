@@ -10,6 +10,7 @@ import {useFavoritesStore} from "@/modules/favorites-store";
 import {SearchResultCoin} from "@/types/crypto";
 import {useOnClickOutside} from "@/hooks/useOnClickOutside";
 import Image from "next/image";
+import {useCompareStore} from "@/modules/compare-store";
 
 export const Search = () => {
   const [query, setQuery] = useState("");
@@ -17,6 +18,7 @@ export const Search = () => {
 
   const queryClient = useQueryClient();
   const {favorites, toggleFavorite} = useFavoritesStore();
+  const {compareIds, toggleCompare} = useCompareStore();
 
   const handleToggleFavorite = useCallback(
     (coinId: string) => {
@@ -74,6 +76,7 @@ export const Search = () => {
           )}
           {results?.map((coin: SearchResultCoin) => {
             const isFavorite = favorites.includes(coin.id);
+            const isCompared = compareIds.includes(coin.id);
             return (
               <div key={coin.id} className="resultItem">
                 <Link
@@ -103,6 +106,15 @@ export const Search = () => {
                   }}
                 >
                   {isFavorite ? "⭐" : "☆"}
+                </span>
+                <span
+                  className={`compareIcon ${isCompared ? "compared" : ""}`}
+                  title={
+                    isCompared ? "Remove from comparsion" : "Add to comparsion"
+                  }
+                  onClick={() => toggleCompare(coin.id)}
+                >
+                  ⚖️
                 </span>
               </div>
             );

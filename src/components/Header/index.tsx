@@ -16,6 +16,9 @@ export const Header = () => {
         <Logo width={60} height={60} />
         <Link href="/">Coin Scraper</Link>
       </div>
+      <div>
+        <Link href="/charts">Charts</Link>
+      </div>
     </header>
   );
 };

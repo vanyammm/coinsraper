@@ -6,12 +6,14 @@ const API_URL = "https://api.coingecko.com/api/v3";
 
 export async function getCoinsMarket({
   pageParam = 1,
+  perPage = COINS_PER_PAGE,
 }: {
   pageParam: number;
+  perPage: number;
 }): Promise<Coin[]> {
   try {
     const response = await fetch(
-      `${API_URL}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${COINS_PER_PAGE}&page=${pageParam}`,
+      `${API_URL}/coins/markets?vs_currency=usd&order=market_cap_desc&per_page=${perPage}&page=${pageParam}`,
       {
         next: {revalidate: 60},
       },
@@ -49,10 +51,10 @@ export async function getCoinDetails(id: string): Promise<CoinDetails> {
   }
 }
 
-export async function getCoinChartData(id: string) {
+export async function getCoinChartData(id: string, days: number = 7) {
   try {
     const response = await fetch(
-      `${API_URL}/coins/${id}/market_chart?vs_currency=usd&days=7`,
+      `${API_URL}/coins/${id}/market_chart?vs_currency=usd&days=${days}`,
       {
         next: {revalidate: 300},
       },
